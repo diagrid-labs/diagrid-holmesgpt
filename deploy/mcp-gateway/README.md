@@ -2,7 +2,7 @@
 
 Diagrid's MCP gateway connects *out* to each MCP server's URL, so in-cluster
 `ClusterIP` MCP servers (`yugabytedb-mcp`, `snmcp`) must be reachable. This sets
-up a TLS ingress with basic-auth and registers them as Catalyst MCP servers.
+up a TLS ingress with basic-auth and registers them as MCP servers in Diagrid.
 (`github` needs none of this — it's registered from the catalog against GitHub's
 hosted MCP; see below.)
 
@@ -76,7 +76,7 @@ diagrid mcpserver create snmcp --project holmesgpt-sre-agent \
   per-tool access). The current `DaprWorkflowHolmesRunner` still calls MCP servers
   via `holmes_config.yaml`'s in-cluster URLs — registering here does not (yet)
   reroute Holmes through Diagrid.
-- Requires a **cloud** Diagrid region (the self-hosted region's control plane
+- Requires a **cloud** Diagrid region (an Enterprise Server region's control plane
   can't reach a public ingress). This project is in `diagrid-aws-eu-west`.
 - Harden further by adding `nginx.ingress.kubernetes.io/whitelist-source-range`
   with Diagrid's egress CIDR once known.

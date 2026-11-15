@@ -17,7 +17,7 @@ cd holmes-app
 uv sync
 export OPENAI_API_KEY=sk-...
 export MODEL=gpt-4o-mini                # optional, default
-# Point at your Catalyst project (no local Dapr runtime to install).
+# Point at your Diagrid project (no local Dapr runtime to install).
 # Values from: diagrid appid get holmes-investigator --project <project>
 export DAPR_GRPC_ENDPOINT=https://grpc-<project>.<region>.diagrid.io:443
 export DAPR_HTTP_ENDPOINT=https://http-<project>.<region>.diagrid.io:443
@@ -64,7 +64,7 @@ There is no test suite, no linter config, and no build step outside the Docker i
 Step-by-step is in the README. Notable non-obvious points:
 
 - **No in-cluster Dapr, no MongoDB.** State stores are Diagrid-managed (`state.diagrid`), provisioned in the project and referenced by name (`agent-workflow`/`agent-memory`/`agent-registry`); the cluster only runs the app + demo services.
-- `sre-agent-secrets` is a regular K8s Secret (not a Catalyst/Dapr secret reference) — the investigator pod consumes it via `envFrom`. Keys: `DAPR_API_TOKEN` (the App ID's `diagrid://…` Diagrid token), `OPENAI_API_KEY`, optionally `GITHUB_TOKEN`, `ARGOCD_TOKEN`, `ARGOCD_SERVER` (host:port only, **no scheme**), `ARGOCD_OPTS` (must include `--grpc-web --insecure` for self-signed cluster ArgoCD), `YUGABYTEDB_URL`, `YUGABYTEDB_RO_PASSWORD`.
+- `sre-agent-secrets` is a regular K8s Secret (not a Diagrid/Dapr secret reference) — the investigator pod consumes it via `envFrom`. Keys: `DAPR_API_TOKEN` (the App ID's `diagrid://…` Diagrid token), `OPENAI_API_KEY`, optionally `GITHUB_TOKEN`, `ARGOCD_TOKEN`, `ARGOCD_SERVER` (host:port only, **no scheme**), `ARGOCD_OPTS` (must include `--grpc-web --insecure` for self-signed cluster ArgoCD), `YUGABYTEDB_URL`, `YUGABYTEDB_RO_PASSWORD`.
 - The YugabyteDB MCP image is **custom-built** — `scripts/build-yugabytedb-mcp.sh` clones upstream and builds it for `linux/amd64`, adding `psycopg[binary]` (the slim base has no libpq, so the server crashes at import without it). No source patch is applied: upstream moved to the standalone `fastmcp` package and no longer needs the old DNS-rebinding workaround.
 - Components are provisioned in the Diagrid project (`diagrid appid create` + `diagrid component list`), **not** applied as in-cluster CRDs. Deploy via the root `Makefile`: `make all` (full multi-namespace bring-up), or `make app`/`make yb`/`make pulsar` to upgrade one component (each is its own Helm release in `charts/`); `make help` lists targets and `charts/README.md` has the layout. The non-K8s pre-flight (Diagrid App ID, secrets in the `holmes`+`yugabyte` namespaces, ArgoCD token) is `deploy/bootstrap.sh`, wrapped by `make bootstrap`/`make argocd-token`.
 
