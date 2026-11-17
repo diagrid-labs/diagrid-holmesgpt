@@ -1,6 +1,6 @@
 # HolmesGPT Durable SRE Agent
 
-A durable SRE Agent that uses the open-source [HolmesGPT](https://holmesgpt.dev) agent, as a durable workflow on [Diagrid](https://www.diagrid.io/catalyst).  A single investigator agent is used to investigate a set of sample failing apps and HolmesGPT decides which tools to call (Kubernetes, ArgoCD, Grafana, Prometheus, GitHub, YugabyteDB, Pulsar, Bash, …). Diagrid wraps every LLM call and tool invocation in a durable workflow activity, providing durable execution to the entire system, ensuring that when calls fail or pods go down, the investigation runs to completion without expensively retrying the LLM.
+A durable SRE Agent that uses the open-source [HolmesGPT](https://holmesgpt.dev) agent, as a durable workflow on [Diagrid](https://www.diagrid.io/platform).  A single investigator agent is used to investigate a set of sample failing apps and HolmesGPT decides which tools to call (Kubernetes, ArgoCD, Grafana, Prometheus, GitHub, YugabyteDB, Pulsar, Bash, …). Diagrid wraps every LLM call and tool invocation in a durable workflow activity, providing durable execution to the entire system, ensuring that when calls fail or pods go down, the investigation runs to completion without expensively retrying the LLM.
 
 This sample is using Diagrid Cloud, where Diagrid runs as a managed service and the workflow engine and state store is hosted by Diagrid, and nothing additional is running on your Kubernetes cluster. 
 
@@ -27,7 +27,7 @@ The container images are prebuilt on Docker Hub — you only need Docker if you 
 
 ## Skills
 
-Each `SKILL.md` under `holmes-app/skills/<name>/` is a procedural runbook keyed by `description` in the YAML frontmatter. HolmesGPT lists them in the system prompt and fetches the matching one when a user asks an aligned question. The format is documented [upstream in HolmesGPT](https://github.com/robusta-dev/holmesgpt/tree/master/holmes/plugins/skills). Skills ship in the image, so add one under `holmes-app/skills/<name>/`, rebuild, and `make app`:
+Each `SKILL.md` under `holmes-app/skills/<name>/` is a procedural runbook keyed by `description` in the YAML frontmatter. HolmesGPT lists them in the system prompt and fetches the matching one when a user asks an aligned question. The format is documented [upstream in HolmesGPT](https://github.com/HolmesGPT/holmesgpt/tree/master/holmes/plugins/skills). Skills ship in the image, so add one under `holmes-app/skills/<name>/`, rebuild, and `make app`:
 
 | Skill | Triggers on |
 | --- | --- |
